@@ -26,12 +26,21 @@ public class WeatherServiceImpl implements WeatherService{
     @Override
     @Retryable(include = IllegalAccessError.class)
     public List<Integer> findCityIdByName(String city) {
-        City[] cities = restTemplate.getForObject(EndpointConfig.queryWeatherByCity + city, City[].class);
         List<Integer> ans = new ArrayList<>();
-        for(City c: cities) {
-            if(c != null && c.getWoeid() != null) {
-                ans.add(c.getWoeid());
+        try {
+            City[] cities = restTemplate.getForObject(EndpointConfig.queryWeatherByCity + city, City[].class);
+            for(City c: cities) {
+                if(c != null && c.getWoeid() != null) {
+                    ans.add(c.getWoeid());
+                }
+             }
             }
+        catch (Exception e)
+            {
+                System.out.println(e);
+            }
+        finally {
+
         }
         return ans;
     }
